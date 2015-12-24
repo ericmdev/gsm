@@ -1,7 +1,11 @@
+#!/usr/local/bin/python
+# coding: utf-8
+
 import sys
 from os import path
 from subprocess import call
 import json
+from re import sub
 from pprint import pprint
 
 " Terminal Colors "
@@ -20,6 +24,7 @@ class GSM(object):
 
     version = str('1.0.0')
     json_file = str('gitsubmodule.json')
+    gitmodules_file = str('.gitmodules')
     dependencies = dict()
     devDependencies = dict()
     cmd = str('install');
@@ -37,7 +42,8 @@ class GSM(object):
 
     " Initialise. "
     def __init__(self):
-        self.message(value="git submodule manager %s" % self.version)
+        # self.message(value="git submodule manager %s" % self.version)
+        pass
 
     " Run. "
     def run(self):
@@ -46,7 +52,15 @@ class GSM(object):
             # install
             if self.cmd == 'install':
                 if self.readJson() == True:
-                    self.addSubmodules()
+                    self.install()
+            # update
+            elif self.cmd == 'update':
+                self.update()
+            # remove
+            elif self.cmd == 'remove':
+                # e.g: test/gsm_test
+                plugin_path = sys.argv[2]
+                self.remove(plugin_path)
         else:
             pass
 
@@ -64,7 +78,7 @@ class GSM(object):
     " Parse Arguments. "
     def parseArgs(self):
         # check argv length
-        if len(sys.argv) != 2:
+        if len(sys.argv) < 2:
             self.message(code='ERR', value="invalid command, try -h for help")
             return False
         # if command argument
@@ -74,7 +88,7 @@ class GSM(object):
                 self.message(value="- install git submodules:")
                 self.message(value="  python gsm.py install")
                 return False
-            elif cmd == 'install':
+            elif cmd in ['install', 'update', 'remove']:
                 self.cmd = cmd
                 return True
             else:
@@ -95,20 +109,61 @@ class GSM(object):
                     return False
             self.dependencies = data["dependencies"].items()
             self.devDependencies = data["devDependencies"].items()
-            self.message(code='OK', value="%s" % self.json_file)
+            # self.message(code='OK', value="%s" % self.json_file)
             return True
         else:
             self.message(code='ERR', value="could not find `%s`" % self.json_file)
             return False
 
-    " Add Git Submodules. "
-    def addSubmodules(self):
+    " Install (Add) Git Submodules. "
+    def install(self):
         for dst, src in self.dependencies:
             self.message(value="- Installing %s" % (dst))
             self.message(value="  Source: %s" % (src))
             call(["git", "submodule", "add", "-f", src, dst])
         # check if all submodules installed
-        # self.message(code='OK', value='add git submodules')
+        self.message(code='OK', value='install')
+
+    " Update Git Submodules. "
+    def update(self):
+        self.message(value="- Updating")
+        call(["git", "submodule", "update", "--init", "--recursive"])
+        self.message(code='OK', value='update')
+
+    " Remove Git Submodule. "
+    def remove(self, plugin_path):
+        self.message(value="- Removing %s%s%s" % (bcolors.BOLD, plugin_path, bcolors.ENDC))
+        if self.deleteModuleEntry(plugin_path) == True:
+            pass
+
+    # Delete Module Entry
+    def deleteModuleEntry(self, plugin_path):
+        # remove the module's entry in the .gitmodules file
+        data = ''
+        skip = 0
+        with open (self.gitmodules_file, "r") as gitmodules_file:
+            for line in gitmodules_file:
+                print(skip)
+                if skip == 0:
+                    if line.rstrip() == "[submodule \"%s\"]" % plugin_path:
+                        print("Found submodule line: %s" % line)
+                        # skip next 2 lines (path, url)
+                        skip = 2
+                    else:
+                        data += "".join(line)
+                        print("Added line: %s" % line)
+                else:
+                    skip = skip -1
+        # update file
+        try:
+            f = open(self.gitmodules_file, "w")
+            f.write(data)
+            f.close()
+            self.message(code='OK', value='removed from %s' % (self.gitmodules_file))
+            return True
+        except IOError as e:
+            self.message(code='ERR', value="I/O error: %s" % e)
+            return False
 
 " Main "
 def main():
