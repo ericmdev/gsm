@@ -4,6 +4,7 @@
 import sys
 from os import path
 from subprocess import call
+from shutil import rmtree
 import json
 from re import sub
 from pprint import pprint
@@ -25,6 +26,7 @@ class GSM(object):
     version = str('1.0.0')
     json_file = str('gitsubmodule.json')
     gitmodules_file = str('.gitmodules')
+    gitconfig_file = path.join('.git', 'config')
     dependencies = dict()
     devDependencies = dict()
     cmd = str('install');
@@ -135,6 +137,12 @@ class GSM(object):
         self.message(value="- Removing %s%s%s" % (bcolors.BOLD, plugin_path, bcolors.ENDC))
         if self.removeModuleEntry(plugin_path) == True:
             pass
+        if self.removeModuleConfig(plugin_path) == True:
+            pass
+        if self.removeModuleCached(plugin_path) == True:
+            pass
+        if self.removeModuleDirectory(plugin_path) == True:
+            pass
 
     # Remove Module Entry
     def removeModuleEntry(self, plugin_path):
@@ -143,15 +151,12 @@ class GSM(object):
         skip = 0
         with open (self.gitmodules_file, "r") as gitmodules_file:
             for line in gitmodules_file:
-                print(skip)
                 if skip == 0:
                     if line.rstrip() == "[submodule \"%s\"]" % plugin_path:
-                        print("Found submodule line: %s" % line)
                         # skip next 2 lines (path, url)
                         skip = 2
                     else:
                         data += "".join(line)
-                        print("Added line: %s" % line)
                 else:
                     skip = skip -1
         # update file
@@ -163,6 +168,47 @@ class GSM(object):
             return True
         except IOError as e:
             self.message(code='ERR', value="I/O error: %s" % e)
+            return False
+
+    # Remove Module Config
+    def removeModuleConfig(self, plugin_path):
+        # remove the module's entry in the .git/config file
+        data = ''
+        skip = 0
+        with open (self.gitconfig_file, "r") as gitconfig_file:
+            for line in gitconfig_file:
+                if skip == 0:
+                    if line.rstrip() == "[submodule \"%s\"]" % plugin_path:
+                        # skip next line (url)
+                        skip = 1
+                    else:
+                        data += "".join(line)
+                else:
+                    skip = skip -1
+        # update file
+        try:
+            f = open(self.gitconfig_file, "w")
+            f.write(data)
+            f.close()
+            self.message(code='OK', value='removed from %s' % (self.gitconfig_file))
+            return True
+        except IOError as e:
+            self.message(code='ERR', value="I/O error: %s" % e)
+            return False
+
+    # Remove Module Cached
+    def removeModuleCached(self, plugin_path):
+        call(["git", "rm", "--cached", plugin_path])
+        self.message(code='OK', value='removed from cached')
+        return True
+
+    # Remove Module Directory
+    def removeModuleDirectory(self, plugin_path):
+        if path.exists(plugin_path):
+            rmtree(plugin_path)
+            self.message(code='OK', value='removed directory %s' % plugin_path)
+            return True
+        else:
             return False
 
 " Main "
