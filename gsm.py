@@ -22,6 +22,7 @@ class GSM(object):
     json_file = str('gitsubmodule.json')
     dependencies = dict()
     devDependencies = dict()
+    cmd = str('install');
     _jsonExists = bool(False)
 
     " Property. "
@@ -37,12 +38,15 @@ class GSM(object):
     " Initialise. "
     def __init__(self):
         self.message(value="git submodule manager %s" % self.version)
-        pass
 
     " Run. "
     def run(self):
-        if self.readJson() == True:
-            self.addSubmodules()
+        # parse args
+        if self.parseArgs() == True:
+            # install
+            if self.cmd == 'install':
+                if self.readJson() == True:
+                    self.addSubmodules()
         else:
             pass
 
@@ -56,6 +60,29 @@ class GSM(object):
             print("gsm %s%s!%s %s" % (color, code, bcolors.ENDC, value))
         else:
             print(value)
+
+    " Parse Arguments. "
+    def parseArgs(self):
+        # check argv length
+        if len(sys.argv) != 2:
+            self.message(code='ERR', value="invalid command, try -h for help")
+            return False
+        # if command argument
+        cmd = sys.argv[1]
+        if cmd:
+            if cmd == '-h':
+                self.message(value="- install git submodules:")
+                self.message(value="  python gsm.py install")
+                return False
+            elif cmd == 'install':
+                self.cmd = cmd
+                return True
+            else:
+                self.message(code='ERR', value="unknown command `%s`" % cmd)
+                return False
+        else:
+            self.message(code='ERR', value="no command given")
+            return False
 
     " Read JSON. "
     def readJson(self):
