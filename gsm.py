@@ -65,8 +65,9 @@ class GSM(object):
             self.message(code='OK', value="read %s" % self.json_file)
             # pprint(data) 
             # pprint(data["dependencies"])
-            for dep in data["dependencies"]:
-                print dep
+            for dst, src in data["dependencies"].items():
+                print ("Installing %s to %s" % (src, dst))
+                # call(["git", "submodule", "add", src, dst])
             return True
         else:
             self.message(code='ERR', value="could not find `%s`" % self.json_file)
