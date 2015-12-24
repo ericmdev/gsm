@@ -66,7 +66,7 @@ class GSM(object):
         else:
             pass
 
-    " Message "
+    " Message. "
     def message(self, value, code=None): 
         if code:
             if code == 'OK':
@@ -117,7 +117,7 @@ class GSM(object):
             self.message(code='ERR', value="could not find `%s`" % self.json_file)
             return False
 
-    " Install (Add) Git Submodules. "
+    " Install/Add Modules. "
     def install(self):
         for dst, src in self.dependencies:
             self.message(value="- Installing %s" % (dst))
@@ -126,13 +126,13 @@ class GSM(object):
         # check if all submodules installed
         self.message(code='OK', value='install')
 
-    " Update Git Submodules. "
+    " Update Modules. "
     def update(self):
         self.message(value="- Updating")
         call(["git", "submodule", "update", "--init", "--recursive"])
         self.message(code='OK', value='update')
 
-    " Remove Git Submodule. "
+    " Remove Module. "
     def remove(self, plugin_path):
         self.message(value="- Removing %s%s%s" % (bcolors.BOLD, plugin_path, bcolors.ENDC))
         if self.removeModuleEntry(plugin_path) == True:
@@ -144,7 +144,7 @@ class GSM(object):
         if self.removeModuleDirectory(plugin_path) == True:
             pass
 
-    # Remove Module Entry
+    " Remove Module Entry. "
     def removeModuleEntry(self, plugin_path):
         # remove the module's entry in the .gitmodules file
         data = ''
@@ -170,7 +170,7 @@ class GSM(object):
             self.message(code='ERR', value="I/O error: %s" % e)
             return False
 
-    # Remove Module Config
+    " Remove Module Config. "
     def removeModuleConfig(self, plugin_path):
         # remove the module's entry in the .git/config file
         data = ''
@@ -196,13 +196,13 @@ class GSM(object):
             self.message(code='ERR', value="I/O error: %s" % e)
             return False
 
-    # Remove Module Cached
+    " Remove Module Cached. "
     def removeModuleCached(self, plugin_path):
         call(["git", "rm", "--cached", plugin_path])
         self.message(code='OK', value='removed from cached')
         return True
 
-    # Remove Module Directory
+    " Remove Module Directory. "
     def removeModuleDirectory(self, plugin_path):
         if path.exists(plugin_path):
             rmtree(plugin_path)
@@ -210,6 +210,11 @@ class GSM(object):
             return True
         else:
             return False
+
+    " List. "
+    def list(self):
+        # List submodules
+        pass
 
 " Main "
 def main():
