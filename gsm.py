@@ -60,8 +60,12 @@ class GSM(object):
     " Read JSON. "
     def readJson(self):
         if self.jsonExists == True:
-            with open(self.json_file) as data_file:    
-                data = json.load(data_file)
+            with open(self.json_file) as data_file: 
+                try:   
+                    data = json.load(data_file)
+                except ValueError as e:
+                    self.message(code='ERR', value="no JSON object could be decoded, please check `%s`" % self.json_file)
+                    return False
             self.dependencies = data["dependencies"].items()
             self.devDependencies = data["devDependencies"].items()
             self.message(code='OK', value="%s" % self.json_file)
