@@ -6,12 +6,15 @@ Easily manage git submodules using a `gitsubmodule.json` file.
 Requirements
 ------------
 
-Requires `Python 2.7`.
+Requires `PHP 5.6+`.
 
-To check your version of Python:
+To check your version of PHP:
 
-    $ python --version
-    # Python 2.7.10
+    $ php -v
+    # PHP 5.6.16 (cli) (built: Nov 27 2015 10:28:34)
+    # Copyright (c) 1997-2015 The PHP Group
+    # Zend Engine v2.6.0, Copyright (c) 1998-2015 Zend Technologies
+    #     with Zend OPcache v7.0.6-dev, Copyright (c) 1999-2015, by Zend Technologies
 
 Usage
 -----
@@ -31,7 +34,7 @@ The above `gitsubmodule.json` tells gsm to clone the gist into our project as a 
 
 All we have to do now is run gsm:
 
-    $ python gsm.py
+    $ php gsm.phar
 
 
 
