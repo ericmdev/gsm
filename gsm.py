@@ -75,8 +75,9 @@ class GSM(object):
         for dst, src in self.dependencies:
             self.message(value="- Installing %s" % (dst))
             self.message(value="  Source: %s" % (src))
-            # call(["git", "submodule", "add", src, dst])
-        self.message(code='OK', value='add git submodules')
+            call(["git", "submodule", "add", src, dst])
+        # check if all submodules installed
+        # self.message(code='OK', value='add git submodules')
 
 " Main "
 def main():
