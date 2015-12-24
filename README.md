@@ -24,6 +24,11 @@ To check your version of Python:
 Usage
 -----
 
+Acquire gsm.py using Wget:
+
+    $ wget https://raw.githubusercontent.com/ericmdev/gsm/master/gsm.py -O gsm.py
+
+
 Enter your git submodule dependencies in `gitsubmodule.json` using the format `destination:source`, e.g:
 
     {
