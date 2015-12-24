@@ -1,7 +1,7 @@
 gsm (Git Submodule Manager)
 ===========================
 
-Easily manage git submodules using a `gitsubmodule.json`.
+Easily manage git submodules using a `gitsubmodule.json` file.
 
 Requirements
 ------------
@@ -27,7 +27,7 @@ Enter your git submodule dependencies in `gitsubmodule.json` using the format `d
 
 *HTTPS is recommended by Github and preferred to SSH.
 
-The above `gitsubmodule.json` tells gsm to clone the gist into our project (as a git submodule) in the directory `bin/lib/gist_example`.
+The above `gitsubmodule.json` tells gsm to clone the gist into our project as a git submodule in the directory `bin/lib/gist_example`.
 
 All we have to do now is run gsm:
 
