@@ -46,5 +46,7 @@ All we have to do now is run gsm:
 
     $ python gsm.py
 
+This will execute the following command for all dependencies listed in `gitsubmodule.json`:
 
+    $ git submodule add [[source]] [[destination]]
 
