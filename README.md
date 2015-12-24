@@ -29,7 +29,7 @@ Acquire gsm.py:
     $ wget https://raw.githubusercontent.com/ericmdev/gsm/master/gsm.py -O gsm.py
 
 
-Enter your git submodule dependencies in `gitsubmodule.json` using the format `destination:source`, e.g:
+Enter your git submodule dependencies in `gitsubmodule.json` using the format `path:source`, e.g:
 
     {
       "dependencies": {
@@ -48,5 +48,5 @@ All we have to do now is run gsm:
 
 This will execute the following command for all dependencies listed in `gitsubmodule.json`:
 
-    $ git submodule add [[source]] [[destination]]
+    $ git submodule add [[source]] [[path]]
 
