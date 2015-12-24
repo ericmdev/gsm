@@ -62,12 +62,9 @@ class GSM(object):
         if self.jsonExists == True:
             with open(self.json_file) as data_file:    
                 data = json.load(data_file)
-            self.message(code='OK', value="read %s" % self.json_file)
-            # pprint(data) 
-            # pprint(data["dependencies"])
-            for dst, src in data["dependencies"].items():
-                print ("Installing %s to %s" % (src, dst))
-                # call(["git", "submodule", "add", src, dst])
+            self.dependencies = data["dependencies"].items()
+            self.devDependencies = data["devDependencies"].items()
+            self.message(code='OK', value="%s" % self.json_file)
             return True
         else:
             self.message(code='ERR', value="could not find `%s`" % self.json_file)
@@ -75,6 +72,10 @@ class GSM(object):
 
     " Add Git Submodules. "
     def addSubmodules(self):
+        for dst, src in self.dependencies:
+            self.message(value="- Installing %s" % (dst))
+            self.message(value="  Source: %s" % (src))
+            # call(["git", "submodule", "add", src, dst])
         self.message(code='OK', value='add git submodules')
 
 " Main "
