@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "test/gsm_test": "https://gist.github.com/6c3553026ab8511cdb19.git"
+  }, 
+  "devDependencies": {}
+}

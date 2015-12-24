@@ -6,7 +6,15 @@ Easily manage git submodules using a `gitsubmodule.json` file.
 Requirements
 ------------
 
-Requires `Python 2.7`.
+Requires:
+
+- `Git 2.4`
+- `Python 2.7`
+
+To check your version of Git:
+
+    $ git --version
+    # git version 2.4.9 (Apple Git-60)
 
 To check your version of Python:
 
