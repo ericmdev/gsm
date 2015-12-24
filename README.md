@@ -24,7 +24,7 @@ To check your version of Python:
 Usage
 -----
 
-Acquire gsm.py using Wget:
+Acquire gsm.py:
 
     $ wget https://raw.githubusercontent.com/ericmdev/gsm/master/gsm.py -O gsm.py
 
