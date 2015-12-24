@@ -133,11 +133,11 @@ class GSM(object):
     " Remove Git Submodule. "
     def remove(self, plugin_path):
         self.message(value="- Removing %s%s%s" % (bcolors.BOLD, plugin_path, bcolors.ENDC))
-        if self.deleteModuleEntry(plugin_path) == True:
+        if self.removeModuleEntry(plugin_path) == True:
             pass
 
-    # Delete Module Entry
-    def deleteModuleEntry(self, plugin_path):
+    # Remove Module Entry
+    def removeModuleEntry(self, plugin_path):
         # remove the module's entry in the .gitmodules file
         data = ''
         skip = 0
